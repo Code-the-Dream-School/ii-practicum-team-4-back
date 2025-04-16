@@ -16,6 +16,3 @@ const server = async () => {
 }
 
 server();
-
-//const listener = () => console.log(`Listening on Port ${PORT}!`);
-//app.listen(PORT, listener);
