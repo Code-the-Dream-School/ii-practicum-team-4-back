@@ -12,34 +12,38 @@ const register = async (req, res) => {
     }
 };
 
-const login = async (req, res) => {
-    const {email, password} = req.body;
-    if (!email||!password) {
-        throw new BadRequestError('Please provide email and password');
-    }
+const login = async (req, res, next) => {
+    try{
+        const {email, password} = req.body;
+        if (!email||!password) {
+            return next(new BadRequestError('Please provide email and password')) ;
+        }
 
-    const user = await User.findOne({ email});
-    if (!user) {
-        throw new UnauthenticatedError('Email or password is incorrect');
+        const user = await User.findOne({ email});
+        if (!user) {
+            return next  (new UnauthenticatedError('Email or password is incorrect'));
+        };
+
+        const isMatch = await user.comparePassword(password);
+        if(!isMatch){
+            return next  (new UnauthenticatedError('Email or password is incorrect'));
+        };
+
+        const token = user.createJWT();
+        res.status(StatusCodes.OK).json({
+            user: {name: user.name}, token,
+        })
+    } catch (err) {
+        next(err);
     };
+}
 
-    const isMatch = await user.comparePassword(password);
-    if(!isMatch){
-        throw new UnauthenticatedError('Email or password is incorrect');
-    };
-
-    const token = user.createJWT();
-    res.status(StatusCodes.OK).json({
-        user: {name: user.name}, token,
-    })
-};
-
-const getCurrentUser = async (res, req) => {
+const getCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({user: req.user});
 }
 
 module.exports = {
     register,
     login,
-    getCurrentUser
+    getCurrentUser,
 }
