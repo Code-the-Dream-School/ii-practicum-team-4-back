@@ -1,5 +1,4 @@
 const Order = require('../models/Order');
-const Box = require('../models/Box');
 const { StatusCodes } = require('http-status-codes');
 
 const getAllOrders = async (req, res) => {
