@@ -4,9 +4,11 @@ const cors = require('cors')
 const favicon = require('express-favicon');
 const logger = require('morgan');
 
-const mainRouter = require('./routes/mainRouter');
+const mainRouter = require('./routes/mainRouter.js');
 const authRouter = require('./routes/authRouter');
 const productsRouter = require('./routes/productsRouter');
+const boxesRouter = require('./routes/boxesRouter');
+const ordersRouter = require('./routes/ordersRouter');
 
 const notFound = require('./middleware/notFound');
 const errorHandlerMiddleware = require('./middleware/errorHandler');
@@ -23,6 +25,8 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use('/api/v1', mainRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/products', productsRouter)
+app.use('/api/v1/boxes', boxesRouter);
+app.use('/api/v1/orders', ordersRouter);
 
 //errors handler
 app.use(notFound);
