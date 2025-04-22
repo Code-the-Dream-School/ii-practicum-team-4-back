@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Box = mongoose.model('Box');
 
 const OrderSchema = new mongoose.Schema(
   {
@@ -70,5 +71,54 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
+OrderSchema.statics.createOrderWithBoxes = async function (orderData, items) {
+  const availableBoxes = await Box.find({}).sort({ weight: 1 });
+  const boxes = [];
+
+  while (items.length > 0) {
+    const box = this._packItemsIntoBox(items, availableBoxes);
+    boxes.push(box);
+  }
+
+  const totalOrderPrice = this._calculateTotalOrderPrice(boxes, availableBoxes);
+
+  return this.create({
+    ...orderData,
+    boxes,
+    totalOrderPrice
+  });
+};
+
+OrderSchema.statics._packItemsIntoBox = function (items, availableBoxes) {
+  const totalWeight = items.reduce((acc, item) => acc + item.weight, 0);
+  let biggestBox = availableBoxes.find(box => box.weight >= totalWeight) || availableBoxes[availableBoxes.length - 1];
+
+  const box = {
+    box_id: biggestBox._id,
+    items: []
+  };
+
+  let boxLeftWeight = biggestBox.weight;
+  while (boxLeftWeight > 0 && items.length > 0) {
+    const item = items.shift();
+    if (item.weight <= boxLeftWeight) {
+      box.items.push(item);
+      boxLeftWeight -= item.weight;
+    } else {
+      box.items.push({ product_id: item.product_id, weight: boxLeftWeight });
+      items.unshift({ product_id: item.product_id, weight: item.weight - boxLeftWeight });
+      break;
+    }
+  }
+
+  return box;
+};
+
+OrderSchema.statics._calculateTotalOrderPrice = function (boxes, availableBoxes) {
+  return boxes.reduce((total, box) => {
+    const boxPrice = availableBoxes.find(b => b._id.toString() === box.box_id.toString()).price;
+    return total + boxPrice;
+  }, 0);
+};
 
 module.exports = mongoose.model('Order', OrderSchema);
