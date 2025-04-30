@@ -2,13 +2,20 @@ const User = require('../models/User');
 const {StatusCodes} = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try{
+        const { email } = req.body;
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            throw new BadRequestError('User with this email already exists!');
+        }
         const user = await User.create(req.body);
         const token = user.createJWT();
-        res.status(StatusCodes.CREATED).json({user:{name: user.name }, token})
+        res.status(StatusCodes.CREATED).json({
+            user:{name: user.name, user_id: user._id }, 
+            token})
     } catch (err) {
-        res.status(StatusCodes.BAD_REQUEST).json({error: err.message})
+        next (err);
     }
 };
 
