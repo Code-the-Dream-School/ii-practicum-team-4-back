@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const Box = require('../models/Box'); // adjust path if needed
+const Box = require('../../models/Box');
 
 let mongoServer;
 
@@ -117,8 +117,7 @@ describe('Box Model', () => {
       err = e;
     }
 
-    // Note: unique constraint errors come from MongoDB, not Mongoose validation
     expect(err).toBeDefined();
-    expect(err.code).toBe(11000); // MongoDB duplicate key error
+    expect(err.code).toBe(11000);
   });
 });

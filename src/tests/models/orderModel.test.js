@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
-const Product = require('../models/Product');
-const Box = require('../models/Box');
-const Order = require('../models/Order');
+const Product = require('../../models/Product');
+const Box = require('../../models/Box');
+const Order = require('../../models/Order');
 
 let mongoServer;
 
