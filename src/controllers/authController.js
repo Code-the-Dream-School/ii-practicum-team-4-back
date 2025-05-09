@@ -2,6 +2,9 @@ const User = require('../models/User');
 const {StatusCodes} = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 
+// @desc    Register a new user
+// @route   POST /api/v1/auth/register
+// @access  Public
 const register = async (req, res, next) => {
     try{
         const { email } = req.body;
@@ -19,6 +22,9 @@ const register = async (req, res, next) => {
     }
 };
 
+// @desc    Login user and return token
+// @route   POST /api/v1/auth/login
+// @access  Public
 const login = async (req, res, next) => {
     try{
         const {email, password} = req.body;
@@ -45,6 +51,9 @@ const login = async (req, res, next) => {
     };
 }
 
+// @desc    Get currently authenticated user info
+// @route   GET /api/v1/auth/current-user
+// @access  Private
 const getCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({user: req.user});
 }
