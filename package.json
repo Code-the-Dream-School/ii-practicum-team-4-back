@@ -21,10 +21,6 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
-    "mongodb-memory-server": "^10.1.4",
-    "mongoose": "^8.14.2",
-    "nodemon": "^2.0.21",
-    "supertest": "^7.1.0"
+    "nodemon": "^2.0.21"
   }
 }

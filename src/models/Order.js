@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Box = mongoose.model('Box');
+const Box = require('./Box');
 
 const OrderSchema = new mongoose.Schema(
   {
