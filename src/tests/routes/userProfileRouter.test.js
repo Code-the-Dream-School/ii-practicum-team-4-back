@@ -4,9 +4,9 @@ const express = require('express');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/User');
-const UserProfile = require('../models/UserProfile');
-const profileRouter = require('../routes/userProfileRouter');
+const User = require('../../models/User');
+const UserProfile = require('../../models/UserProfile');
+const profileRouter = require('../../routes/userProfileRouter');
 
 let mongoServer;
 let app;
@@ -54,7 +54,7 @@ afterAll(async () => {
   });
   
   describe('ProfileController routes', () => {
-    it('GET /profile → creates and returns profile', async () => {
+    it('GET /profile - creates and returns profile', async () => {
       const res = await request(app)
         .get('/api/v1/profile')
         .set('Authorization', `Bearer ${token}`);
@@ -66,7 +66,7 @@ afterAll(async () => {
         }
     });
   
-    it('POST /profile/address → adds new address', async () => {
+    it('POST /profile/address - adds new address', async () => {
       const address = {
         first_name: 'Test',
         last_name: 'Next',
@@ -86,7 +86,7 @@ afterAll(async () => {
       expect(res.body.profile.addresses[0].first_name).toBe('Test');
     });
   
-    it('DELETE /profile/address → deletes address by index', async () => {
+    it('DELETE /profile/address - deletes address by index', async () => {
       // add address
       const address = {
         first_name: 'toDelete',

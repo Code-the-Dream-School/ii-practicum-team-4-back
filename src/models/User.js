@@ -44,8 +44,8 @@ userSchema.post('save', async function (doc, next){
         }
         next();
     } catch (err) {
-        console/error('Error creating UserProfile:', err);
-        next(err)
+        console.error('Error creating UserProfile:', err);
+        next(err);
     }
 });
 

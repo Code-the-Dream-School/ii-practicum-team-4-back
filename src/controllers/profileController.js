@@ -13,16 +13,6 @@ const getProfile = async (req, res) => {
     res.status(StatusCodes.OK).json({ profile });
   };
 
-/*/getProfile for testing
-const getProfile = async (req, res) => {
-    const user_id = req.user.userId; 
-    let profile = await UserProfile.findOne({ user_id });
-    if (!profile) {
-      profile = await UserProfile.create({ user_id, addresses: [] });
-    } 
-    res.status(StatusCodes.OK).json({ profile });
-  };
-/*/
 
   // @desc    Add new delivery address  
   // @route   POST /api/v1/profile/address  
@@ -46,7 +36,7 @@ const getProfile = async (req, res) => {
       return res.status(StatusCodes.CREATED).json({ profile});
     }
 
-    if(!profile.addresses.length === 0){
+    if(profile.addresses.length === 0){
       profile.addresses.push(address);
     } else if (profile.addresses.length === 1) {
       profile.addresses.push(address);

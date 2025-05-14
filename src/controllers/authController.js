@@ -54,8 +54,18 @@ const login = async (req, res, next) => {
 // @desc    Get currently authenticated user info
 // @route   GET /api/v1/auth/current-user
 // @access  Private
-const getCurrentUser = async (req, res) => {
-    res.status(StatusCodes.OK).json({user: req.user});
+const getCurrentUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.userId).select('name email');
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({ msg: 'User not found' });
+        }
+        const token = user.createJWT();
+        res.status(200).json({ user, token });
+    } catch (err) {
+        console.error('CURRENT USER ERROR:', err);
+        next(err);
+    }
 }
 
 module.exports = {
