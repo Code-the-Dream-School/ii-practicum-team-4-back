@@ -46,7 +46,16 @@ To run this application, you need to have Node.js and MongoDB installed on your 
    ```bash
     npm install
     ```
-4. Create a `.env` file in the root directory and add your MongoDB connection string.
+4. Create a `.env` file in the root directory and add your MongoDB connection string and JWT secret:
+```bash
+   # .env.template
+   MONGODB_URI=mongodb://localhost:27017/your_database_name
+   JWT_SECRET=your_jwt_secret
+   JWT_EXPIRES_IN=1d
+```
+   Replace `your_database_name` with the name of your MongoDB database and `your_jwt_secret` with a secure secret key for JWT.
+
+   Make sure to keep the `.env` file secure and do not share it publicly.
 
 5. Run the application:
    ```bash
