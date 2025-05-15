@@ -1,5 +1,8 @@
+const { jwtDecode } = require('jwt-decode');
 const Order = require('../models/Order');
 const { StatusCodes } = require('http-status-codes');
+
+const UserProfile = require('../models/UserProfile');
 
 const getAllOrders = async (req, res) => {
   try {
@@ -27,7 +30,6 @@ const getOrder = async (req, res) => {
 const createOrder = async (req, res) => {
   try {
     const {
-      user_id,
       items,
       delivery_address,
       delivery_first_name,
@@ -36,6 +38,10 @@ const createOrder = async (req, res) => {
       delivery_email,
       delivery_additional_info
     } = req.body;
+
+    const token = req.headers.authorization?.split(' ')[1];
+    const decoded = jwtDecode(token);
+    const { userId: user_id } = decoded;
 
     if (!user_id || !items || items.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({ error: 'User ID and items are required' });
@@ -50,6 +56,26 @@ const createOrder = async (req, res) => {
       delivery_email,
       delivery_additional_info
     };
+
+    //save Data into the UserProfile
+    await UserProfile.findOneAndUpdate(
+      {user_id},
+      {
+        $addToSet: {
+          addresses: {
+            first_name: delivery_first_name,
+            last_name: delivery_last_name,
+            phone: delivery_phone,
+            email: delivery_email,
+            address: delivery_address,
+            additional_info: delivery_additional_info
+          }
+        }
+      },
+      {upsert: true,
+       new: true
+      }
+    );
 
     const order = await Order.createOrderWithBoxes(orderData, items);
     return res.status(StatusCodes.CREATED).json({ order });

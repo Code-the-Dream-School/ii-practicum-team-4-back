@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+//add UserProfile
+const UserProfile = require('./UserProfile');
+
 const userSchema = new mongoose.Schema ({
     name: {
         type: String,
@@ -32,11 +35,24 @@ userSchema.pre('save', async function () {
     
 });
 
+//create empty UserProfile after user saved
+userSchema.post('save', async function (doc, next){
+    try{
+        const existing = await UserProfile.findOne({ user_id: doc._id});
+        if (!existing) {
+            await UserProfile.create({ user_id: doc._id, addresses: []})
+        }
+        next();
+    } catch (err) {
+        console.error('Error creating UserProfile:', err);
+        next(err);
+    }
+});
+
 //create JWT
 userSchema.methods.createJWT = function (){
     return jwt.sign (
-        { userId: this._id,
-          name: this.name },
+        { userId: this._id, name: this.name },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_LIFETIME }
     )
