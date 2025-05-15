@@ -2,6 +2,8 @@ const { jwtDecode } = require('jwt-decode');
 const Order = require('../models/Order');
 const { StatusCodes } = require('http-status-codes');
 
+const UserProfile = require('../models/UserProfile');
+
 const getAllOrders = async (req, res) => {
   try {
     const { user_id } = req.query;
@@ -54,6 +56,26 @@ const createOrder = async (req, res) => {
       delivery_email,
       delivery_additional_info
     };
+
+    //save Data into the UserProfile
+    await UserProfile.findOneAndUpdate(
+      {user_id},
+      {
+        $addToSet: {
+          addresses: {
+            first_name: delivery_first_name,
+            last_name: delivery_last_name,
+            phone: delivery_phone,
+            email: delivery_email,
+            address: delivery_address,
+            additional_info: delivery_additional_info
+          }
+        }
+      },
+      {upsert: true,
+       new: true
+      }
+    );
 
     const order = await Order.createOrderWithBoxes(orderData, items);
     return res.status(StatusCodes.CREATED).json({ order });
