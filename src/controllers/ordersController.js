@@ -1,3 +1,4 @@
+const { jwtDecode } = require('jwt-decode');
 const Order = require('../models/Order');
 const { StatusCodes } = require('http-status-codes');
 
@@ -29,7 +30,6 @@ const getOrder = async (req, res) => {
 const createOrder = async (req, res) => {
   try {
     const {
-      user_id,
       items,
       delivery_address,
       delivery_first_name,
@@ -38,6 +38,10 @@ const createOrder = async (req, res) => {
       delivery_email,
       delivery_additional_info
     } = req.body;
+
+    const token = req.headers.authorization?.split(' ')[1];
+    const decoded = jwtDecode(token);
+    const { userId: user_id } = decoded;
 
     if (!user_id || !items || items.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({ error: 'User ID and items are required' });
