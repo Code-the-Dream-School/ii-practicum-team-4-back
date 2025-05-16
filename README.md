@@ -1,30 +1,74 @@
-# Back-End Repo for Node/React Practicum
+# Welcome to the backend part of the Farm2You project!
+### This project is a collaborative effort by the ii-Practicum Team 4, and it is part of backend component.
 
-This will be the API for the front-end React app part of your practicum project.
+## Project Overview
+**Farm2You is a web application designed to connect local farm directly with consumers, promoting local produce and 
+sustainable farming practices. The backend of the application is built using Node.js and Express, providing a robust 
+and scalable server-side solution.
+The application is designed to be user-friendly and efficient, allowing users to easily navigate through the various features
+and functionalities. The backend is responsible for handling user authentication, managing product listings, processing orders,
+and providing a seamless experience for the consumers.**
 
-These instructions are for the **front-end team** so they can setup their local development environment to run 
-both the back-end server and their front-end app. You can go through these steps during your first group meeting 
-in case you need assistance from your mentors.
+## Table of Contents
+- [Technologies Used](#technologies-used)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
 
->The back-end server will be running on port 8000. The front-end app will be running on port 3000. You will need to run both the back-end server and the front-end app at the same time to test your app.
+## Technologies Used
+- **Node.js**: v16.14.2
+- **Express**: v4.18.2
+- **Mongoose**: v7.0.1
+- **Jest**: v29.7.0
+- **MongoDB**: A NoSQL database for storing data in a flexible, JSON-like format.
+- **Swagger**: A tool for documenting APIs.
 
-### Setting up local development environment
+## Features
+- **User Authentication**: Secure user registration and login functionality.
+- **Product Management**: CRUD operations for managing products.
+- **Order Processing**: Handling user orders and payment processing.
+- **API Documentation**: Comprehensive API documentation using Swagger for easy reference and testing.
+- **Testing**: Unit tests using Jest to ensure code quality and reliability.
+- **Environment Variables**: Configuration management using `.env` files for sensitive information.
 
-1. Create a folder to contain both the front-end and back-end repos 
-2. Clone this repository to that folder
-3. Run `npm install` to install dependencies
-4. Pull the latest version of the `main` branch (when needed)
-5. Run `npm run dev` to start the development server
-6. Open http://localhost:8000/api/v1/ with your browser to test.
-7. Your back-end server is now running. You can now run the front-end app.
+## Getting Started
+To run this application, you need to have Node.js and MongoDB installed on your machine. Follow these steps to set up the project:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Code-the-Dream-School/ii-practicum-team-4-back.git
+    ```
+2. Navigate to the project directory:
+```bash
+   cd ii-practicum-team-4-back
+   ```
+3. Install the required packages:
+   ```bash
+    npm install
+    ```
+4. Create a `.env` file in the root directory and add your MongoDB connection string and JWT secret:
+```bash
+   # .env.template
+   MONGODB_URI=mongodb://localhost:27017/your_database_name
+   JWT_SECRET=your_jwt_secret
+   JWT_EXPIRES_IN=1d
+```
+   Replace `your_database_name` with the name of your MongoDB database and `your_jwt_secret` with a secure secret key for JWT.
 
-#### Running the back-end server in Visual Studio Code
+   Make sure to keep the `.env` file secure and do not share it publicly.
 
-Note: In the below example, the group's front-end repository was named `bb-practicum-team1-front` and the back-end repository was named `bb-practicum-team-1-back`. Your repository will have a different name, but the rest should look the same.
-![vsc running](images/back-end-running-vsc.png)
+5. Run the application:
+   ```bash
+   npm run dev
+   ```
+   
+## API Documentation
+- Access the API documentation at `http://localhost:8000/api-docs`.
 
-#### Testing the back-end server API in the browser
-
-![browser server](images/back-end-running-browser.png)
-
->Update the .node-version file to match the version of Node.js the **team** is using. This is used by Render.com to [deploy the app](https://render.com/docs/node-version).
+## Testing
+This project uses Jest and MongoMemoryServer, so no local MongoDB instance is required.
+- Run Jest tests:
+   ```bash
+   npm test
+   ```
+This will automatically spin up an in-memory MongoDB instance for testing.
