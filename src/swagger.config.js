@@ -1,4 +1,6 @@
+require('dotenv').config();
 const swaggerJSDoc = require('swagger-jsdoc');
+
 
 const swaggerOptions = {
   definition: {
@@ -10,7 +12,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:8000',
+        url: process.env.BASE_URL,
       },
     ],
   },
