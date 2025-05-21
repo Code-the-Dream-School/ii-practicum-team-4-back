@@ -42,7 +42,8 @@ describe('Products Router', () => {
 
       expect(res.statusCode).toBe(200);
       expect(res.body.products.length).toBe(2);
-      expect(res.body.products[0]).toHaveProperty('name', 'Carrot');
+      expect(res.body.products[0]).toHaveProperty('name', 'Carrot', 'category', 'vegetables');
+      expect(res.body.products[1]).toHaveProperty('name', 'Apple', 'category', 'fruits');
     });
   });
 

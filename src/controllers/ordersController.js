@@ -7,7 +7,9 @@ const UserProfile = require('../models/UserProfile');
 const getAllOrders = async (req, res) => {
   try {
     const { user_id } = req.query;
-    const orders = await Order.find({ user_id } );
+    const orders = await Order.find({ user_id } )
+      .populate('boxes.items.product_id', 'name image price')
+      .sort({ createdAt: -1 });
     res.status(StatusCodes.OK).json({ orders });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -17,7 +19,8 @@ const getAllOrders = async (req, res) => {
 const getOrder = async (req, res) => {
   const { id } = req.params;
   try {
-    const order = await Order.findById(id);
+    const order = await Order.findById(id)
+      .populate('boxes.items.product_id', 'name image price');
     if (!order) {
       return res.status(StatusCodes.NOT_FOUND).json({ error: 'Order not found' });
     }
