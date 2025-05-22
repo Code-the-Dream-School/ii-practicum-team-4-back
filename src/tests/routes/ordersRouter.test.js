@@ -7,6 +7,7 @@ const Order = require('../../models/Order');
 const Box = require('../../models/Box');
 const Product = require('../../models/Product');
 const ordersRouter = require('../../routes/ordersRouter');
+const jwt = require("jsonwebtoken");
 
 let app, mongoServer;
 
@@ -38,6 +39,8 @@ afterEach(async () => {
 describe('Orders Router', () => {
   let userId, productId, boxId;
 
+  const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET || 'testsecret');
+
   beforeEach(async () => {
     userId = new mongoose.Types.ObjectId();
     productId = (await Product.create({ name: 'Apple', category: 'fruits' }))._id;
@@ -48,10 +51,12 @@ describe('Orders Router', () => {
     it('should create a new order and pack items into boxes', async () => {
       const items = [{ product_id: productId, weight: 5 }];
 
+      const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET || 'testsecret');
+
       const res = await request(app)
         .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
         .send({
-          user_id: userId,
           items,
           delivery_address: '123 Farm Road',
           delivery_first_name: 'Alice',
@@ -68,8 +73,12 @@ describe('Orders Router', () => {
     });
 
     it('should return 400 if user_id or items are missing', async () => {
-      const res = await request(app).post('/api/orders').send({});
+      const res = await request(app)
+        .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
+        .send({}); // Missing items
       expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/items/i);
     });
   });
 
